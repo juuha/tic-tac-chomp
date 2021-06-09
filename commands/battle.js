@@ -1,4 +1,5 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons');
+const init_emojis = require('../functions/init_emojis');
 
 module.exports.run = async (bot, message, args) => {
     var message_copy = message
@@ -6,7 +7,16 @@ module.exports.run = async (bot, message, args) => {
         message.delete()
     } catch (error) { console.error(error) }
 
-    let new_message = "yo"
+    const emojis = await init_emojis(bot)
+
+    let new_message = "Tic Tac Chomp! Jhem vs Not-Jhem!\n"
+        + ` ${emojis.blank} | ${emojis.blank} | ${emojis.blank}\n`
+        + "---------------\n"
+        + ` ${emojis.blank} | ${emojis.blank} | ${emojis.blank} \n`
+        + "---------------\n"
+        + ` ${emojis.blank} | ${emojis.blank} | ${emojis.blank} \n\n`
+        + "Jhem's turn! (Red)"
+
     let buttons = {}
     let count = 1
 
@@ -22,7 +32,7 @@ module.exports.run = async (bot, message, args) => {
         }
     }
 
-    let sizes = ["", "2x small", "2x medium", "2x humongous"]
+    let sizes = ["", "2x tiny", "2x regular", "2x humongous"]
     for (let i = 1; i <= 3; i++) {
         let buttonRed = new MessageButton()
             .setStyle('red')
@@ -33,6 +43,7 @@ module.exports.run = async (bot, message, args) => {
             .setStyle('blurple')
             .setLabel(sizes[i])
             .setID("" + i + 5)
+            .setDisabled()
 
         buttons["" + i + 4] = buttonRed
         buttons["" + i + 5] = buttonBlue
