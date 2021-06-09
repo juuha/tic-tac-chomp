@@ -4,6 +4,9 @@ const Config = require("./config.json")
 const fs = require("fs")
 
 const bot = new Discord.Client({ disableEveryone: true, partials: ['MESSAGE'] })
+const btn = require('discord-buttons')
+btn(bot)
+
 bot.commands = new Discord.Collection()
 fs.readdir("./commands/", (error, files) => {
     if (error) console.error(error)
