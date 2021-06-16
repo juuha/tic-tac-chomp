@@ -2,6 +2,7 @@ const Discord = require("discord.js")
 const Token = require("./token.json")
 const Config = require("./config.json")
 const fs = require("fs")
+const button_handler = require("./functions/button_handler.js")
 
 const bot = new Discord.Client({ disableEveryone: true, partials: ['MESSAGE'] })
 const btn = require('discord-buttons')
@@ -38,6 +39,11 @@ bot.on("message", async (message) => {
     let args = msgArray.slice(1)
     let cmd_file = bot.commands.get(cmd.slice(prefix.length))
     if (cmd_file) cmd_file.run(bot, message, args)
+})
+
+bot.on("clickButton", async (button) => {
+    button_handler(bot, button.message, button.id, button.clicker.user)
+    await button.defer()
 })
 
 bot.login(Token.token)
