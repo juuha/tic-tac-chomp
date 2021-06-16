@@ -24,7 +24,7 @@ fs.readdir("./commands/", (error, files) => {
 bot.on("ready", async () => {
     console.log(`${bot.user.username} is online and ready to serve! Running on ${bot.guilds.cache.size} servers!`)
     bot.user.setActivity("#help", { type: "LISTENING" })
-    
+    bot.games = {}
 })
 
 bot.on("message", async (message) => {

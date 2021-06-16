@@ -9,13 +9,44 @@ module.exports.run = async (bot, message, args) => {
 
     const emojis = await init_emojis(bot)
 
-    let new_message = "Tic Tac Chomp! Jhem vs Not-Jhem!\n"
-        + ` ${emojis.blank} | ${emojis.blank} | ${emojis.blank}\n`
-        + "---------------\n"
-        + ` ${emojis.blank} | ${emojis.blank} | ${emojis.blank} \n`
-        + "---------------\n"
-        + ` ${emojis.blank} | ${emojis.blank} | ${emojis.blank} \n\n`
-        + "Jhem's turn! (Red)"
+    bot.games[message_copy.id] = {
+        challenger: message_copy.author,
+        challengee: "not me",
+        chosen: "",
+        turn: 0,
+        board: {
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": ["red_tiny", "red_tiny"],
+            "15": ["blue_tiny", "blue_tiny"],
+            "21": [],
+            "22": [],
+            "23": [],
+            "24": ["red_medium", "red_medium"],
+            "25": ["blue_medium", "blue_medium"],
+            "31": [],
+            "32": [],
+            "33": [],
+            "34": ["red_large", "red_large"],
+            "35": ["blue_large", "blue_large"]
+        }
+    }
+
+    let board = {}
+    for (let i = 1; i <= 9; i++) {
+        board[i] = emojis.blank
+    }
+
+    let game = bot.games[message_copy.id]
+
+    let new_message = `Tic Tac Chomp! \n**${game.challenger.username}** ${emojis.red} vs **${game.challengee}** ${emojis.blue}!\n`
+        + ` ${board[1]} | ${board[2]} | ${board[3]}\n`
+        + "----------------\n"
+        + ` ${board[4]} | ${board[5]} | ${board[6]}\n`
+        + "----------------\n"
+        + ` ${board[7]} | ${board[8]} | ${board[9]}\n\n`
+        + `Jhem's turn! ${emojis.red}`
 
     let buttons = {}
     let count = 1
@@ -26,13 +57,14 @@ module.exports.run = async (bot, message, args) => {
                 .setStyle('grey')
                 .setLabel("" + count)
                 .setID("" + i + j)
+                .setDisabled()
 
             count++
             buttons["" + i + j] = button
         }
     }
 
-    let sizes = ["", "2x tiny", "2x regular", "2x humongous"]
+    let sizes = ["", "2x tiny", "2x regular", "2x giant"]
     for (let i = 1; i <= 3; i++) {
         let buttonRed = new MessageButton()
             .setStyle('red')
