@@ -10,8 +10,7 @@ module.exports.run = async (bot, message, args) => {
     const emojis = await init_emojis(bot)
 
     let game = {
-        challenger: message_copy.author,
-        challengee: "not me",
+        players: [message_copy.author, {username: "not me"}],
         chosen: "",
         turn: 0,
         board: {
@@ -38,13 +37,13 @@ module.exports.run = async (bot, message, args) => {
         board[i] = emojis.blank
     }
 
-    let new_message = `Tic Tac Chomp! \n**${game.challenger.username}** ${emojis.red} vs **${game.challengee}** ${emojis.blue}!\n`
+    let new_message = `Tic Tac Chomp! \n**${game.players[0].username}** ${emojis.red} vs **${game.players[1].username}** ${emojis.blue}!\n`
         + ` ${board[1]} | ${board[2]} | ${board[3]}\n`
         + "----------------\n"
         + ` ${board[4]} | ${board[5]} | ${board[6]}\n`
         + "----------------\n"
         + ` ${board[7]} | ${board[8]} | ${board[9]}\n\n`
-        + `Jhem's turn! ${emojis.red}`
+        + `${game.players[game.turn].username}'s turn! ${emojis.red}`
 
     let buttons = {}
     let count = 1
