@@ -9,7 +9,7 @@ module.exports.run = async (bot, message, args) => {
 
     const emojis = await init_emojis(bot)
 
-    bot.games[message_copy.id] = {
+    let game = {
         challenger: message_copy.author,
         challengee: "not me",
         chosen: "",
@@ -18,18 +18,18 @@ module.exports.run = async (bot, message, args) => {
             "11": [],
             "12": [],
             "13": [],
-            "14": ["red_tiny", "red_tiny"],
-            "15": ["blue_tiny", "blue_tiny"],
+            "14": ["0_red_tiny", "0_red_tiny"],
+            "15": ["0_blue_tiny", "0_blue_tiny"],
             "21": [],
             "22": [],
             "23": [],
-            "24": ["red_medium", "red_medium"],
-            "25": ["blue_medium", "blue_medium"],
+            "24": ["1_red_medium", "1_red_medium"],
+            "25": ["1_blue_medium", "1_blue_medium"],
             "31": [],
             "32": [],
             "33": [],
-            "34": ["red_large", "red_large"],
-            "35": ["blue_large", "blue_large"]
+            "34": ["2_red_large", "2_red_large"],
+            "35": ["2_blue_large", "2_blue_large"]
         }
     }
 
@@ -37,8 +37,6 @@ module.exports.run = async (bot, message, args) => {
     for (let i = 1; i <= 9; i++) {
         board[i] = emojis.blank
     }
-
-    let game = bot.games[message_copy.id]
 
     let new_message = `Tic Tac Chomp! \n**${game.challenger.username}** ${emojis.red} vs **${game.challengee}** ${emojis.blue}!\n`
         + ` ${board[1]} | ${board[2]} | ${board[3]}\n`
@@ -93,6 +91,7 @@ module.exports.run = async (bot, message, args) => {
 
     try {
         let sent = await message_copy.channel.send(new_message, { components: [row1, row2, row3] })
+        bot.games[sent.id] = game
     } catch (error) { console.log(error) }
 }
 
