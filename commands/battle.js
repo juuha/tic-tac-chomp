@@ -17,18 +17,18 @@ module.exports.run = async (bot, message, args) => {
             "11": [],
             "12": [],
             "13": [],
-            "14": ["0_red_tiny", "0_red_tiny"],
-            "15": ["0_blue_tiny", "0_blue_tiny"],
+            "14": [{name: "tiny red", size: 0, color: "red", emoji: "🔺"}, {name: "tiny red", size: 0, color: "red", emoji: "🔺"}],
+            "15": [{name: "tiny blue", size: 0, color: "blue", emoji: "🔹"}, {name: "tiny blue", size: 0, color: "blue", emoji: "🔹"}],
             "21": [],
             "22": [],
             "23": [],
-            "24": ["1_red_medium", "1_red_medium"],
-            "25": ["1_blue_medium", "1_blue_medium"],
+            "24": [{name: "medium red", size: 1, color: "red", emoji: "⭕"}, {name: "medium red", size: 1, color: "red", emoji: "⭕"}],
+            "25": [{name: "medium blue", size: 1, color: "blue", emoji: "🔷"}, {name: "medium blue", size: 1, color: "blue", emoji: "🔷"}],
             "31": [],
             "32": [],
             "33": [],
-            "34": ["2_red_large", "2_red_large"],
-            "35": ["2_blue_large", "2_blue_large"]
+            "34": [{name: "large red", size: 2, color: "red", emoji: "🔴"}, {name: "large red", size: 2, color: "red", emoji: "🔴"}],
+            "35": [{name: "large blue", size: 2, color: "blue", emoji: "🔵"}, {name: "large blue", size: 2, color: "blue", emoji: "🔵"}]
         }
     }
 
