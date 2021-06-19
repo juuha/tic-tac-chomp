@@ -1,10 +1,16 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons')
+const init_emojis = require('./init_emojis')
 
 module.exports = async (bot, message, button_id, user) => {
     let game = bot.games[message.id]
+    const emojis = await init_emojis(bot)
+
 
     if (game.players[game.turn].id != user.id) {
-        console.log("users didn't match")
+        try {
+            const sent = await message.channel.send(`Not your turn ${user.username}! It's ${game.players[game.turn].username}'s turn!`)
+            await sent.delete({ timeout: 5000 })
+        } catch (error) { console.log(error) }
         return
     }
 
@@ -17,19 +23,13 @@ module.exports = async (bot, message, button_id, user) => {
         let chosen = game.board[game.chosen].pop()
         game.board[button_id].push(chosen)
 
-        let result = checkWin(game.board)
+        let result = await checkWin(game.board)
 
         switch (result) {
-            case 0: {
-                message.channel.send("Red won!")
-                break
-            }
-            case 1: {
-                message.channel.send("Red won!")
-                break
-            }
+            case 0:
+            case 1:
             case "tie": {
-                message.channel.send("It was a tie.")
+                await endGame(message, game, result)
                 break
             }
             default: {
@@ -52,8 +52,13 @@ module.exports = async (bot, message, button_id, user) => {
     let row3 = new MessageActionRow()
         .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
 
+    let colors = ["red", "blue"]
+
+    let new_content = `Tic Tac Chomp! \n**${game.players[0].username}** ${emojis.red} versus **${game.players[1].username}** ${emojis.blue}!\n`
+        + `${game.players[game.turn].username}'s turn! ${emojis[colors[game.turn]]}`
+
     try {
-        message.edit(message.content, { components: [row1, row2, row3] })
+        message.edit(new_content, { components: [row1, row2, row3] })
     } catch (error) { console.log(error) }
 
 }
@@ -100,7 +105,7 @@ checkWin = async (board) => {
     }
 
     // diagonal, top right to bottom left
-    if (board["13"].length && board["22"].length && board["13"].length) {
+    if (board["13"].length && board["22"].length && board["31"].length) {
         if (board["13"][board["13"].length - 1].color == board["22"][board["22"].length - 1].color
             && board["22"][board["22"].length - 1].color == board["31"][board["31"].length - 1].color) {
             if (result) {
@@ -182,4 +187,8 @@ setButtons = async (game, message) => {
     }
 
     return buttons
+}
+
+endGame = async (game, result, message) => {
+
 }
