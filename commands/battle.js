@@ -9,8 +9,10 @@ module.exports.run = async (bot, message, args) => {
 
     const emojis = await init_emojis(bot)
 
+    let opponent = getUserFromMention(bot, args[0])
+
     let game = {
-        players: [message_copy.author, {username: "not me"}],
+        players: [message_copy.author, opponent],
         chosen: "",
         turn: 0,
         board: {
@@ -92,4 +94,18 @@ module.exports.run = async (bot, message, args) => {
 module.exports.help = {
     name: "battle",
     short: "b"
+}
+
+function getUserFromMention(bot, mention) {
+    if (!mention) return;
+
+    if (mention.startsWith('<@') && mention.endsWith('>')) {
+        mention = mention.slice(2, -1);
+
+        if (mention.startsWith('!')) {
+            mention = mention.slice(1);
+        }
+
+        return bot.users.cache.get(mention);
+    }
 }
