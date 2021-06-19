@@ -13,7 +13,7 @@ module.exports = async (bot, message, button_id, user) => {
         if (game.chosen == button_id) {
             game.chosen = ""
             break step
-        } 
+        }
         let chosen = game.board[game.chosen].pop()
         game.board[button_id].push(chosen)
 
@@ -42,7 +42,7 @@ module.exports = async (bot, message, button_id, user) => {
     }
 
     let buttons = setButtons(game, message)
-    
+
 }
 
 checkWin = async (board) => {
@@ -102,7 +102,6 @@ checkWin = async (board) => {
 }
 
 setButtons = async (game, message) => {
-    console.log(game.board)
     let buttons = {}
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 5; j++) {
@@ -118,44 +117,49 @@ setButtons = async (game, message) => {
     for (let i = 1; i <= 3; i++) {
         for (let j = 1; j <= 3; j++) {
             if (chosen) {
-                if (!game.board[""+i+j].length) {
-                    buttons[""+i+j].disabled = false
-                } else if (game.board[""+i+j][game.board[""+i+j].length - 1].size < chosen.size) {
-                    buttons[""+i+j].disabled = false
+                if (!game.board["" + i + j].length) {
+                    buttons["" + i + j].disabled = false
+                } else if (game.board["" + i + j][game.board["" + i + j].length - 1].size < chosen.size) {
+                    buttons["" + i + j].disabled = false
                 } else {
-                    buttons[""+i+j].setDisabled()
+                    buttons["" + i + j].setDisabled()
                 }
             } else {
-                if (game.board[""+i+j].length) {
-                    if (game.board[""+i+j][game.board[""+i+j].length - 1].color == game.turn) {
-                        buttons[""+i+j].disabled = false
+                if (game.board["" + i + j].length) {
+                    if (game.board["" + i + j][game.board["" + i + j].length - 1].color == game.turn) {
+                        buttons["" + i + j].disabled = false
                     } else {
-                        buttons[""+i+j].setDisabled()
+                        buttons["" + i + j].setDisabled()
                     }
                 } else {
-                    buttons[""+i+j].setDisabled()
+                    buttons["" + i + j].setDisabled()
+                }
+                if (game.board["" + i + j].length) {
+                    buttons["" + i + j].setLabel(`${game.board["" + i + j][game.board["" + i + j].length - 1].emoji}`)
+                } else {
+                    buttons["" + i + j].setLabel(`${"" + ((i - 1) * 3 + (j - 1) + 1)}`)
                 }
             }
         }
     }
 
-    let size = {"1": "tiny", "2": "medium", "3": "large"}
+    let size = { "1": "tiny", "2": "medium", "3": "large" }
     for (let i = 1; i <= 3; i++) {
         for (let j = 4; j <= 5; j++) {
             if (chosen) {
                 buttons["" + i + j].setDisabled()
             } else {
-                if (game.board[""+i+j].length) {
-                    if (game.board[""+i+j][game.board[""+i+j].length - 1].color == game.turn) {
-                        buttons[""+i+j].disabled = false
+                if (game.board["" + i + j].length) {
+                    if (game.board["" + i + j][game.board["" + i + j].length - 1].color == game.turn) {
+                        buttons["" + i + j].disabled = false
                     } else {
-                        buttons[""+i+j].setDisabled()
+                        buttons["" + i + j].setDisabled()
                     }
                 } else {
-                    buttons[""+i+j].setDisabled()
+                    buttons["" + i + j].setDisabled()
                 }
             }
-            buttons["" + i + j].setLabel(`${game.board[""+i+j].length}x ${size[i]}`)
+            buttons["" + i + j].setLabel(`${game.board["" + i + j].length}x ${size[i]}`)
         }
     }
 
@@ -176,5 +180,5 @@ setButtons = async (game, message) => {
     try {
         message.edit(message.content, { components: [row1, row2, row3] })
     } catch (error) { console.log(error) }
-    return buttons    
+    return buttons
 }
