@@ -41,7 +41,20 @@ module.exports = async (bot, message, button_id, user) => {
         game.chosen = button_id
     }
 
-    let buttons = setButtons(game, message)
+    let buttons = await setButtons(game, message)
+
+    let row1 = new MessageActionRow()
+        .addComponents(buttons[11], buttons[12], buttons[13], buttons[14], buttons[15])
+
+    let row2 = new MessageActionRow()
+        .addComponents(buttons[21], buttons[22], buttons[23], buttons[24], buttons[25])
+
+    let row3 = new MessageActionRow()
+        .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
+
+    try {
+        message.edit(message.content, { components: [row1, row2, row3] })
+    } catch (error) { console.log(error) }
 
 }
 
@@ -168,17 +181,5 @@ setButtons = async (game, message) => {
         buttons[game.chosen].setLabel("Cancel move.")
     }
 
-    let row1 = new MessageActionRow()
-        .addComponents(buttons[11], buttons[12], buttons[13], buttons[14], buttons[15])
-
-    let row2 = new MessageActionRow()
-        .addComponents(buttons[21], buttons[22], buttons[23], buttons[24], buttons[25])
-
-    let row3 = new MessageActionRow()
-        .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
-
-    try {
-        message.edit(message.content, { components: [row1, row2, row3] })
-    } catch (error) { console.log(error) }
     return buttons
 }
