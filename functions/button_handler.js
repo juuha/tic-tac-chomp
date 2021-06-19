@@ -20,17 +20,17 @@ module.exports = async (bot, message, button_id, user) => {
         let result = checkWin(game.board)
 
         switch (result) {
-            case "blue": {
-                message.channel.send("Blue won!")
-                break step
-            }
-            case "red": {
+            case 0: {
                 message.channel.send("Red won!")
-                break step
+                break
+            }
+            case 1: {
+                message.channel.send("Red won!")
+                break
             }
             case "tie": {
                 message.channel.send("It was a tie.")
-                break step
+                break
             }
             default: {
                 game.chosen = ""
@@ -102,6 +102,7 @@ checkWin = async (board) => {
 }
 
 setButtons = async (game, message) => {
+    console.log(game.board)
     let buttons = {}
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 5; j++) {
@@ -117,9 +118,23 @@ setButtons = async (game, message) => {
     for (let i = 1; i <= 3; i++) {
         for (let j = 1; j <= 3; j++) {
             if (chosen) {
-
+                if (!game.board[""+i+j].length) {
+                    buttons[""+i+j].disabled = false
+                } else if (game.board[""+i+j][game.board[""+i+j].length - 1].size < chosen.size) {
+                    buttons[""+i+j].disabled = false
+                } else {
+                    buttons[""+i+j].setDisabled()
+                }
             } else {
-
+                if (game.board[""+i+j].length) {
+                    if (game.board[""+i+j][game.board[""+i+j].length - 1].color == game.turn) {
+                        buttons[""+i+j].disabled = false
+                    } else {
+                        buttons[""+i+j].setDisabled()
+                    }
+                } else {
+                    buttons[""+i+j].setDisabled()
+                }
             }
         }
     }
@@ -130,7 +145,15 @@ setButtons = async (game, message) => {
             if (chosen) {
                 buttons["" + i + j].setDisabled()
             } else {
-
+                if (game.board[""+i+j].length) {
+                    if (game.board[""+i+j][game.board[""+i+j].length - 1].color == game.turn) {
+                        buttons[""+i+j].disabled = false
+                    } else {
+                        buttons[""+i+j].setDisabled()
+                    }
+                } else {
+                    buttons[""+i+j].setDisabled()
+                }
             }
             buttons["" + i + j].setLabel(`${game.board[""+i+j].length}x ${size[i]}`)
         }
@@ -138,7 +161,6 @@ setButtons = async (game, message) => {
 
     if (chosen) {
         buttons[game.chosen].disabled = false
-        game.old_label = buttons[game.chosen].label
         buttons[game.chosen].setLabel("Cancel move.")
     }
 
