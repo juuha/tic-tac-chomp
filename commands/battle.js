@@ -19,18 +19,18 @@ module.exports.run = async (bot, message, args) => {
             "11": [],
             "12": [],
             "13": [],
-            "14": [{name: "tiny red", size: 0, color: 0, emoji: "🔺"}, {name: "tiny red", size: 0, color: 0, emoji: "🔺"}],
-            "15": [{name: "tiny blue", size: 0, color: 1, emoji: "🔹"}, {name: "tiny blue", size: 0, color: 1, emoji: "🔹"}],
+            "14": [{name: "tiny red", size: 0, color: 0, emoji: emojis.small_red}, {name: "tiny red", size: 0, color: 0, emoji: emojis.small_red}],
+            "15": [{name: "tiny blue", size: 0, color: 1, emoji: emojis.small_blue}, {name: "tiny blue", size: 0, color: 1, emoji: emojis.small_blue}],
             "21": [],
             "22": [],
             "23": [],
-            "24": [{name: "medium red", size: 1, color: 0, emoji: "⭕"}, {name: "medium red", size: 1, color: 0, emoji: "⭕"}],
-            "25": [{name: "medium blue", size: 1, color: 1, emoji: "🔷"}, {name: "medium blue", size: 1, color: 1, emoji: "🔷"}],
+            "24": [{name: "medium red", size: 1, color: 0, emoji: emojis.medium_blue}, {name: "medium red", size: 1, color: 0, emoji: emojis.medium_red}],
+            "25": [{name: "medium blue", size: 1, color: 1, emoji: emojis.medium_blue}, {name: "medium blue", size: 1, color: 1, emoji: emojis.medium_blue}],
             "31": [],
             "32": [],
             "33": [],
-            "34": [{name: "large red", size: 2, color: 0, emoji: "🔴"}, {name: "large red", size: 2, color: 0, emoji: "🔴"}],
-            "35": [{name: "large blue", size: 2, color: 1, emoji: "🔵"}, {name: "large blue", size: 2, color: 1, emoji: "🔵"}]
+            "34": [{name: "large red", size: 2, color: 0, emoji: emojis.large_red}, {name: "large red", size: 2, color: 0, emoji: emojis.large_red}],
+            "35": [{name: "large blue", size: 2, color: 1, emoji: emojis.large_blue}, {name: "large blue", size: 2, color: 1, emoji: emojis.large_blue}]
         }
     }
 
@@ -53,16 +53,19 @@ module.exports.run = async (bot, message, args) => {
         }
     }
 
-    let sizes = ["", "2x tiny", "2x regular", "2x giant"]
+    let reds = ["", emojis.small_red, emojis.medium_red, emojis.large_red]
+    let blues = ["", emojis.small_blue, emojis.medium_blue, emojis.large_blue]
     for (let i = 1; i <= 3; i++) {
         let buttonRed = new MessageButton()
             .setStyle('red')
-            .setLabel(sizes[i])
             .setID("" + i + 4)
+            .setLabel("x 2")
+            .setEmoji(reds[i])
 
         let buttonBlue = new MessageButton()
             .setStyle('blurple')
-            .setLabel(sizes[i])
+            .setLabel("x 2")
+            .setEmoji(blues[i])
             .setID("" + i + 5)
             .setDisabled()
 
