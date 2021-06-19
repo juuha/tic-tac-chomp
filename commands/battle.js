@@ -37,12 +37,7 @@ module.exports.run = async (bot, message, args) => {
         board[i] = emojis.blank
     }
 
-    let new_message = `Tic Tac Chomp! \n**${game.players[0].username}** ${emojis.red} vs **${game.players[1].username}** ${emojis.blue}!\n`
-        + ` ${board[1]} | ${board[2]} | ${board[3]}\n`
-        + "----------------\n"
-        + ` ${board[4]} | ${board[5]} | ${board[6]}\n`
-        + "----------------\n"
-        + ` ${board[7]} | ${board[8]} | ${board[9]}\n\n`
+    let new_message = `Tic Tac Chomp! \n**${game.players[0].username}** ${emojis.red} versus **${game.players[1].username}** ${emojis.blue}!\n`
         + `${game.players[game.turn].username}'s turn! ${emojis.red}`
 
     let buttons = {}
