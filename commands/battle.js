@@ -1,5 +1,5 @@
-const { MessageButton, MessageActionRow } = require('discord-buttons');
-const init_emojis = require('../functions/init_emojis');
+const { MessageButton, MessageActionRow } = require('discord-buttons')
+const init_emojis = require('../functions/init_emojis')
 
 module.exports.run = async (bot, message, args) => {
     var message_copy = message
