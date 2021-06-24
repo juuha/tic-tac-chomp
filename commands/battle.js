@@ -1,5 +1,6 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons')
 const init_emojis = require('../functions/init_emojis')
+const Config = require('../config.json')
 
 module.exports.run = async (bot, message, args) => {
     var message_copy = message
@@ -9,7 +10,26 @@ module.exports.run = async (bot, message, args) => {
 
     const emojis = await init_emojis(bot)
 
-    let opponent = getUserFromMention(bot, args[0])
+    let opponent = null
+
+    if (args[0]) {
+        opponent = getUserFromMention(bot, args[0])
+        if (!opponent) {
+            try {
+                let error_message = `${args[0]} is not a user in this server!`
+                let sent = await message_copy.channel.send(error_message)
+                await sent.delete({ timeout: 10000 })
+                return
+            } catch (error) { console.log(error) }
+        }
+    } else {
+        try {
+            let error_message = `You need to specify your opponent! Usage: ${Config.prefix}battle <@who>`
+            let sent = await message_copy.channel.send(error_message)
+            await sent.delete({ timeout: 10000 })
+            return
+        } catch (error) { console.log(error) }
+    }
 
     let game = {
         players: [message_copy.author, opponent],
