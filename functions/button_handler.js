@@ -1,5 +1,7 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons')
+const init_chomper = require('./init_chomper')
 const init_emojis = require('./init_emojis')
+const update_chomper = require('./update_chomper')
 
 module.exports = async (bot, message, button_id, user) => {
     const game = bot.games[message.id]
@@ -207,16 +209,27 @@ setButtons = async (game, emojis) => {
 
 endGame = async (bot, game, result, message, emojis) => {
     let new_content = ""
+    let challenger = await init_chomper(game.players[0])
+    let opponent = await init_chomper(game.players[1])
+    let players = [challenger, opponent]
+
     switch (result) {
         case 0:
         case 1: {
             new_content = `${game.players[result].username} ${emojis[["red", "blue"][result]]} won against ${game.players[(result + 1) % 2].username} ${emojis[["red", "blue"][(result + 1) % 2]]}!`
+            players[result].wins++
+            players[(result + 1) % 2].losses++
             break
         }
         default: {
             new_content = `Tie between ${game.players[0].username} ${emojis["red"]} and ${game.players[1].username} ${emojis["blue"]}!`
+            challenger.ties++
+            opponent.ties++
         }
     }
+
+    await update_chomper(challenger)
+    await update_chomper(opponent)
 
     let buttons = {}
 
