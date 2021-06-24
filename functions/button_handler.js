@@ -2,7 +2,7 @@ const { MessageButton, MessageActionRow } = require('discord-buttons')
 const init_emojis = require('./init_emojis')
 
 module.exports = async (bot, message, button_id, user) => {
-    let game = bot.games[message.id]
+    const game = bot.games[message.id]
     const emojis = await init_emojis(bot)
 
 
@@ -24,13 +24,12 @@ module.exports = async (bot, message, button_id, user) => {
         game.board[button_id].push(chosen)
 
         let result = await checkWin(game.board)
-
         switch (result) {
             case 0:
             case 1:
             case "tie": {
-                await endGame(message, game, result)
-                break
+                await endGame(bot, game, result, message, emojis)
+                return
             }
             default: {
                 game.chosen = ""
@@ -41,7 +40,7 @@ module.exports = async (bot, message, button_id, user) => {
         game.chosen = button_id
     }
 
-    let buttons = await setButtons(game, message)
+    let buttons = await setButtons(game, emojis)
 
     let row1 = new MessageActionRow()
         .addComponents(buttons[11], buttons[12], buttons[13], buttons[14], buttons[15])
@@ -52,10 +51,8 @@ module.exports = async (bot, message, button_id, user) => {
     let row3 = new MessageActionRow()
         .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
 
-    let colors = ["red", "blue"]
-
     let new_content = `Tic Tac Chomp! \n**${game.players[0].username}** ${emojis.red} versus **${game.players[1].username}** ${emojis.blue}!\n`
-        + `${game.players[game.turn].username}'s turn! ${emojis[colors[game.turn]]}`
+        + `${game.players[game.turn].username}'s turn! ${emojis[["red", "blue"][game.turn]]}`
 
     try {
         message.edit(new_content, { components: [row1, row2, row3] })
@@ -119,76 +116,170 @@ checkWin = async (board) => {
     return result
 }
 
-setButtons = async (game, message) => {
+setButtons = async (game, emojis) => {
     let buttons = {}
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 5; j++) {
-            let btn = message.components[i].components[j]
-            buttons[btn.custom_id] = btn
-        }
+
+    let board_emoji_color_size = {
+        "00": emojis.small_red,
+        "01": emojis.medium_red,
+        "02": emojis.large_red,
+        "10": emojis.small_blue,
+        "11": emojis.medium_blue,
+        "12": emojis.large_blue
     }
 
-    let chosen = null
-    if (game.chosen) {
-        chosen = game.board[game.chosen][game.board[game.chosen].length - 1]
-    }
     for (let i = 1; i <= 3; i++) {
         for (let j = 1; j <= 3; j++) {
-            if (chosen) {
-                if (!game.board["" + i + j].length) {
-                    buttons["" + i + j].disabled = false
-                } else if (game.board["" + i + j][game.board["" + i + j].length - 1].size < chosen.size) {
-                    buttons["" + i + j].disabled = false
-                } else {
-                    buttons["" + i + j].setDisabled()
-                }
-            } else {
-                if (game.board["" + i + j].length) {
-                    if (game.board["" + i + j][game.board["" + i + j].length - 1].color == game.turn) {
-                        buttons["" + i + j].disabled = false
-                    } else {
-                        buttons["" + i + j].setDisabled()
+            let button = new MessageButton()
+                .setStyle('grey')
+                .setLabel("" + ((i - 1) * 3 + j))
+                .setID("" + i + j)
+                .setDisabled()
+
+            if (game.chosen) {
+                if (game.board["" + i + j][game.board["" + i + j].length - 1]) {
+                    let piece = game.board["" + i + j][game.board["" + i + j].length - 1]
+                    button.setEmoji(board_emoji_color_size["" + piece.color + piece.size])
+                    button.setLabel("")
+
+                    let chosen_piece = game.board[game.chosen][game.board[game.chosen].length - 1]
+                    if (piece.size < chosen_piece.size) {
+                        button.setDisabled(false)
                     }
                 } else {
-                    buttons["" + i + j].setDisabled()
+                    button.setDisabled(false)
                 }
-                if (game.board["" + i + j].length) {
-                    buttons["" + i + j].setLabel(`${game.board["" + i + j][game.board["" + i + j].length - 1].emoji}`)
-                } else {
-                    buttons["" + i + j].setLabel(`${"" + ((i - 1) * 3 + (j - 1) + 1)}`)
+            } else {
+                if (game.board["" + i + j][game.board["" + i + j].length - 1]) {
+                    let piece = game.board["" + i + j][game.board["" + i + j].length - 1]
+                    button.setEmoji(board_emoji_color_size["" + piece.color + piece.size])
+                    button.setLabel("")
+                    if (piece.color == game.turn) {
+                        button.setDisabled(false)
+                    }
                 }
             }
+
+            buttons["" + i + j] = button
         }
     }
 
-    let size = { "1": "tiny", "2": "medium", "3": "large" }
+    let bank_emoji_color_size = {
+        "14": emojis.small_red,
+        "24": emojis.medium_red,
+        "34": emojis.large_red,
+        "15": emojis.small_blue,
+        "25": emojis.medium_blue,
+        "35": emojis.large_blue
+    }
+
     for (let i = 1; i <= 3; i++) {
         for (let j = 4; j <= 5; j++) {
-            if (chosen) {
-                buttons["" + i + j].setDisabled()
-            } else {
-                if (game.board["" + i + j].length) {
-                    if (game.board["" + i + j][game.board["" + i + j].length - 1].color == game.turn) {
-                        buttons["" + i + j].disabled = false
-                    } else {
-                        buttons["" + i + j].setDisabled()
+            let button = new MessageButton()
+                .setStyle('grey')
+                .setLabel(` x ${game.board["" + i + j].length}`)
+                .setEmoji(bank_emoji_color_size["" + i + j])
+                .setID("" + i + j)
+                .setDisabled()
+
+            if (!game.chosen) {
+                if (game.board["" + i + j][game.board["" + i + j].length - 1]) {
+                    let piece = game.board["" + i + j][game.board["" + i + j].length - 1]
+                    if (piece.color == game.turn) {
+                        button.setDisabled(false)
                     }
-                } else {
-                    buttons["" + i + j].setDisabled()
                 }
             }
-            buttons["" + i + j].setLabel(`${game.board["" + i + j].length}x ${size[i]}`)
+
+            buttons["" + i + j] = button
         }
     }
 
-    if (chosen) {
+    if (game.chosen) {
         buttons[game.chosen].disabled = false
         buttons[game.chosen].setLabel("Cancel move.")
+        buttons[game.chosen].setEmoji(undefined)
+
     }
 
     return buttons
 }
 
-endGame = async (game, result, message) => {
+endGame = async (bot, game, result, message, emojis) => {
+    let new_content = ""
+    switch (result) {
+        case 0:
+        case 1: {
+            new_content = `${game.players[result].username} ${emojis[["red", "blue"][result]]} won against ${game.players[(result + 1) % 2].username} ${emojis[["red", "blue"][(result + 1) % 2]]}!`
+            break
+        }
+        default: {
+            new_content = `Tie between ${game.players[0].username} ${emojis["red"]} and ${game.players[1].username} ${emojis["blue"]}!`
+        }
+    }
 
+    let buttons = {}
+
+    let board_emoji_color_size = {
+        "00": emojis.small_red,
+        "01": emojis.medium_red,
+        "02": emojis.large_red,
+        "10": emojis.small_blue,
+        "11": emojis.medium_blue,
+        "12": emojis.large_blue
+    }
+
+    for (let i = 1; i <= 3; i++) {
+        for (let j = 1; j <= 3; j++) {
+            let button = new MessageButton()
+                .setStyle('grey')
+                .setLabel("" + ((i - 1) * 3 + j))
+                .setID("" + i + j)
+                .setDisabled()
+
+            if (game.board["" + i + j].length) {
+                let piece = game.board["" + i + j][game.board["" + i + j].length - 1]
+                button.setEmoji(board_emoji_color_size["" + piece.color + piece.size])
+                button.setLabel("")
+            }
+
+            buttons["" + i + j] = button
+        }
+    }
+
+    let bank_emoji_color_size = {
+        "14": emojis.small_red,
+        "24": emojis.medium_red,
+        "34": emojis.large_red,
+        "15": emojis.small_blue,
+        "25": emojis.medium_blue,
+        "35": emojis.large_blue
+    }
+
+    for (let i = 1; i <= 3; i++) {
+        for (let j = 4; j <= 5; j++) {
+            let button = new MessageButton()
+                .setStyle('grey')
+                .setLabel(` x ${game.board["" + i + j].length}`)
+                .setEmoji(bank_emoji_color_size["" + i + j])
+                .setID("" + i + j)
+                .setDisabled()
+
+            buttons["" + i + j] = button
+        }
+    }
+
+    let row1 = new MessageActionRow()
+        .addComponents(buttons[11], buttons[12], buttons[13], buttons[14], buttons[15])
+
+    let row2 = new MessageActionRow()
+        .addComponents(buttons[21], buttons[22], buttons[23], buttons[24], buttons[25])
+
+    let row3 = new MessageActionRow()
+        .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
+
+    try {
+        await message.edit(new_content, { components: [row1, row2, row3] })
+        delete bot.games[message.id]
+    } catch (error) { console.log(error) }
 }
