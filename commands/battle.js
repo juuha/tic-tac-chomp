@@ -19,18 +19,18 @@ module.exports.run = async (bot, message, args) => {
             "11": [],
             "12": [],
             "13": [],
-            "14": [{name: "tiny red", size: 0, color: 0, emoji: emojis.small_red}, {name: "tiny red", size: 0, color: 0, emoji: emojis.small_red}],
-            "15": [{name: "tiny blue", size: 0, color: 1, emoji: emojis.small_blue}, {name: "tiny blue", size: 0, color: 1, emoji: emojis.small_blue}],
+            "14": [{ name: "tiny red", size: 0, color: 0, emoji: emojis.small_red }, { name: "tiny red", size: 0, color: 0, emoji: emojis.small_red }],
+            "15": [{ name: "tiny blue", size: 0, color: 1, emoji: emojis.small_blue }, { name: "tiny blue", size: 0, color: 1, emoji: emojis.small_blue }],
             "21": [],
             "22": [],
             "23": [],
-            "24": [{name: "medium red", size: 1, color: 0, emoji: emojis.medium_blue}, {name: "medium red", size: 1, color: 0, emoji: emojis.medium_red}],
-            "25": [{name: "medium blue", size: 1, color: 1, emoji: emojis.medium_blue}, {name: "medium blue", size: 1, color: 1, emoji: emojis.medium_blue}],
+            "24": [{ name: "medium red", size: 1, color: 0, emoji: emojis.medium_blue }, { name: "medium red", size: 1, color: 0, emoji: emojis.medium_red }],
+            "25": [{ name: "medium blue", size: 1, color: 1, emoji: emojis.medium_blue }, { name: "medium blue", size: 1, color: 1, emoji: emojis.medium_blue }],
             "31": [],
             "32": [],
             "33": [],
-            "34": [{name: "large red", size: 2, color: 0, emoji: emojis.large_red}, {name: "large red", size: 2, color: 0, emoji: emojis.large_red}],
-            "35": [{name: "large blue", size: 2, color: 1, emoji: emojis.large_blue}, {name: "large blue", size: 2, color: 1, emoji: emojis.large_blue}]
+            "34": [{ name: "large red", size: 2, color: 0, emoji: emojis.large_red }, { name: "large red", size: 2, color: 0, emoji: emojis.large_red }],
+            "35": [{ name: "large blue", size: 2, color: 1, emoji: emojis.large_blue }, { name: "large blue", size: 2, color: 1, emoji: emojis.large_blue }]
         }
     }
 
@@ -81,7 +81,6 @@ module.exports.run = async (bot, message, args) => {
 
     let row3 = new MessageActionRow()
         .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
-
 
     try {
         let sent = await message_copy.channel.send(new_message, { components: [row1, row2, row3] })
