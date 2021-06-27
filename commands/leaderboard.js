@@ -14,9 +14,9 @@ module.exports.run = async (bot, message, args) => {
 
     for (let id in chompers) {
         let c = chompers[id]
-        leaderboard.push({ name: c.name, wins: c.wins, losses: c.losses, ties: c.ties, ratio: (c.wins/c.losses).toFixed(3) })
+        leaderboard.push({ name: c.name, wins: c.wins, losses: c.losses, ties: c.ties, rating: (10*c.wins*c.wins/(c.losses+1)).toFixed(0)})
     }
-    leaderboard.sort((a, b) => (a.ratio < b.ratio) ? 1 : -1)
+    leaderboard.sort((a, b) => (a.rating < b.rating) ? 1 : -1)
     let max = Math.min(5, leaderboard.length)
 
     let rank = leaderboard.findIndex(g => g.name === chomper.name) + 1
@@ -29,7 +29,7 @@ module.exports.run = async (bot, message, args) => {
         let g = leaderboard[i]
         names += `${i + 1}.\u2800${g.name}\n`
         stats += `${g.wins}${emojis.large_red}\u2800${g.losses}${emojis.small_blue}\u2800${g.ties}${emojis.medium_blue}${emojis.medium_red}\n`
-        ratio += `${g.ratio}${emojis.small_red}${emojis.large_blue}\n`
+        ratio += `${g.rating}${emojis.small_red}${emojis.large_blue}\n`
     }
 
     if (rank > max) {
@@ -43,7 +43,7 @@ module.exports.run = async (bot, message, args) => {
         .addFields(
             { name: 'Name', value: names, inline: true },
             { name: `Wins, losses and ties`, value: stats, inline: true },
-            { name: `W/L ratio`, value: ratio, inline: true },
+            { name: `Rating`, value: ratio, inline: true },
         )
         .setColor(0xffd700)
 
