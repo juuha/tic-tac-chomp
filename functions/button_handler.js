@@ -53,7 +53,7 @@ module.exports = async (bot, message, button_id, user) => {
     let row3 = new MessageActionRow()
         .addComponents(buttons[31], buttons[32], buttons[33], buttons[34], buttons[35])
 
-    let new_content = `Tic Tac Chomp! \n**${game.players[0].username}** ${emojis.red} versus **${game.players[1].username}** ${emojis.blue}!\n`
+    let new_content = `${emojis.small_red}${emojis.medium_red}${emojis.large_red}${emojis.large_blue}${emojis.medium_blue}${emojis.small_blue}\n**${game.players[0].username}** ${emojis.red} versus **${game.players[1].username}** ${emojis.blue}!\n`
         + `${game.players[game.turn].username}'s turn! ${emojis[["red", "blue"][game.turn]]}`
 
     try {
