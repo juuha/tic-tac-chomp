@@ -19,5 +19,5 @@ There are shorthand commands for your comfort:
 1. Clone the repo
 2. Replace the `<place-holder>` in token.json with your private Discord bot token.
 3. If you wish, change the prefix in config.json.
-4. Install the dependencies with npm install.
+4. Install the dependencies with `npm install`.
 5. Run the bot with `node app.js`.
