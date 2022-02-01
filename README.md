@@ -13,3 +13,11 @@ The game consists of a 3x3 board with 3 sizes of pieces. Similarly to regular ti
 There are shorthand commands for your comfort:
 - &b for battle
 - &lb for leaderboard.
+
+## Setting it up
+
+1. Clone the repo
+2. Replace the `<place-holder>` in token.json with your private Discord bot token.
+3. If you wish, change the prefix in config.json.
+4. Install the dependencies with npm install.
+5. Run the bot with `node app.js`.
